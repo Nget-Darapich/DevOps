@@ -9,12 +9,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                bat './mvnw.cmd clean package -DskipTests'
+                bat './mvnw.cmd clean package -DskipTests -Dmaven.compiler.release=21'
             }
         }
         stage('Test') {
             steps {
-                bat './mvnw.cmd test'
+                bat './mvnw.cmd test -Dmaven.compiler.release=21'
             }
         }
         stage('Deploy to Web Server') {
