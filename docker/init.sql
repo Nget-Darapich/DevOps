@@ -1,8 +1,8 @@
 -- Initialize ID Card Database
--- Database: A-NGET_Darapich-db
+-- Database: B-NGET_Darapich-db
 
 -- Use the created database
-USE `A-NGET_Darapich-db`;
+USE `B-NGET_Darapich-db`;
 
 -- Create templates table (must be created before profiles due to FK constraint)
 CREATE TABLE IF NOT EXISTS `templates` (

@@ -5,7 +5,7 @@ services:
     container_name: id-card-mysql
     environment:
       MYSQL_ROOT_PASSWORD: Hello@123
-      MYSQL_DATABASE: A-NGET_Darapich-db
+      MYSQL_DATABASE: B-NGET_Darapich-db
       MYSQL_ROOT_HOST: '%'
     ports:
       - "3307:3306"
@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfile
     container_name: id-card-web
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/A-NGET_Darapich-db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/B-NGET_Darapich-db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Hello@123
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
