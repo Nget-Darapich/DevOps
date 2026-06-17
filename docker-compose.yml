@@ -1,0 +1,69 @@
+version: '3.9'
+
+services:
+  # MySQL Database Service
+  mysql-db:
+    image: mysql:8.0
+    container_name: id-card-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Hello@123
+      MYSQL_DATABASE: A-NGET_Darapich-db
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - idcard-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pHello@123" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Spring Boot Web Server Service
+  web-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: id-card-web
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/A-NGET_Darapich-db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Hello@123
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: 'false'
+      SERVER_PORT: 9090
+      JAVA_OPTS: -Xmx512m -Xms256m
+    ports:
+      - "8080:8080"    # Web server (NGINX)
+      - "8443:8443"    # HTTPS
+      - "2222:22"      # SSH
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    networks:
+      - idcard-network
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/profiles" ]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  idcard-network:
+    driver: bridge
