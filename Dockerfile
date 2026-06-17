@@ -6,6 +6,9 @@ FROM eclipse-temurin:25-jdk-jammy
 
 # Install required packages
 RUN apt-get update && apt-get install -y \
+    git \
+    maven \
+    mysql-client \
     nginx \
     openssh-server \
     openssh-client \

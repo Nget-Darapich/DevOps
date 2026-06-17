@@ -1,0 +1,36 @@
+- name: Deploy and Test ID Card Application
+  hosts: web-server
+  vars:
+    ansible_ssh_user: root
+    ansible_ssh_pass: root
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+  tasks:
+    - name: Pull latest code
+      shell: chdir=/repo git pull
+
+    - name: Build project with Maven
+      shell: |
+        JAVA_HOME=/opt/java/openjdk \
+        ./mvnw clean package -DskipTests -Dmaven.compiler.release=21
+      args:
+        chdir: /repo
+
+    - name: Run tests against SQLite
+      shell: |
+        JAVA_HOME=/opt/java/openjdk \
+        ./mvnw clean test
+      args:
+        chdir: /repo
+      register: test_output
+
+    - name: Show test results
+      debug:
+        var: test_output.stdout_lines
+
+    - name: Backup MySQL database
+      shell: mysqldump -h mysql-db -uroot -pHello@123 B-NGET_Darapich-db > /repo/backup.sql
+
+    - name: Verify backup file
+      stat:
+        path: /repo/backup.sql
