@@ -8,11 +8,17 @@ pipeline {
             steps { checkout scm }
         }
         stage('Build') {
+            environment {
+                JAVA_HOME = 'C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.9.10-hotspot'
+            }
             steps {
                 bat './mvnw.cmd clean package -DskipTests -Dmaven.compiler.release=21'
             }
         }
         stage('Test') {
+            environment {
+                JAVA_HOME = 'C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.9.10-hotspot'
+            }
             steps {
                 bat './mvnw.cmd test -Dmaven.compiler.release=21'
             }
