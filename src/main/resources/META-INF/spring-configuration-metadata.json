@@ -1,0 +1,21 @@
+{
+  "properties": [
+    {
+      "name": "app.upload.dir",
+      "type": "java.lang.String",
+      "description": "Directory path for uploading and storing profile photos.",
+      "defaultValue": "uploads/photos/"
+    }
+  ],
+  "hints": [
+    {
+      "name": "app.upload.dir",
+      "values": [
+        {
+          "value": "uploads/photos/",
+          "description": "Default local directory for photo uploads"
+        }
+      ]
+    }
+  ]
+}
