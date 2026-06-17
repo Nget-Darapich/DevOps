@@ -18,10 +18,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: ./mvnw.cmd clean package -DskipTests -Dmaven.compiler.release=21
-
+        run: ./mvnw.cmd clean package -DskipTests "-Dmaven.compiler.release=21"
+      
       - name: Test with Maven
-        run: ./mvnw.cmd test -Dmaven.compiler.release=21
+        run: ./mvnw.cmd test "-Dmaven.compiler.release=21"
 
       - name: Deploy to Web Server
         if: success()
