@@ -1,7 +1,6 @@
 # Dockerfile for ID Card Manager Application
 # Uses pre-built JAR from local Maven build (mvn clean package)
 # Runtime: JDK 25 (eclipse-temurin:25-jdk)
-
 # ============ RUNTIME STAGE ============
 FROM eclipse-temurin:25-jdk-jammy
 
