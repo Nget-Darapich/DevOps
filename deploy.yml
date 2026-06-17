@@ -3,22 +3,22 @@
   hosts: localhost
   connection: local
   vars:
-    project_root: /mnt/d/I4/CTP_Software_Engineering/demo/demo
     jar_name: demo-0.0.1-SNAPSHOT.jar
     container_name: id-card-web
 
   tasks:
     - name: Copy new JAR into container
-      shell: docker cp {{ project_root }}/target/{{ jar_name }} {{ container_name }}:/app/{{ jar_name }}
+      shell: |
+        cp /mnt/c/actions-runner/_work/DevOps/DevOps/target/{{ jar_name }} /tmp/{{ jar_name }}
+        docker cp /tmp/{{ jar_name }} {{ container_name }}:/app/demo.jar
+        rm /tmp/{{ jar_name }}
 
-    - name: Restart Spring Boot service
-      shell: docker exec {{ container_name }} supervisorctl restart spring-boot
+    - name: Restart Spring Boot service (kill java, supervisor auto-restarts)
+      shell: docker exec {{ container_name }} sh -c "pkill -f 'java.*demo\.jar' || true"
 
     - name: Wait for app to become healthy
-      uri:
-        url: http://localhost:8080/profiles
-        status_code: 200
+      shell: docker exec {{ container_name }} curl -f http://localhost:8080/profiles
       register: result
-      until: result.status == 200
-      retries: 12
+      until: result.rc == 0
+      retries: 10
       delay: 5
